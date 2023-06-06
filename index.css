@@ -1,0 +1,89 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.correct {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  gap: 10px;
+}
+
+
+
+@media (max-width: 1100px) {
+  .page {
+    flex-direction: column;
+    width: 550px !important;
+    height: fit-content !important;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: start !important;
+    gap: 5px !important;
+  }
+  .wrapper {
+    margin-top: 25px;
+    height: fit-content !important;
+    width: 100% !important;
+    align-items: center !important;
+  }
+  .capture {
+    height: fit-content !important;
+    width: 100% !important;
+    height: 100% !important;
+    align-items: center !important;
+    justify-content: start !important;
+  }
+  .video {
+    height: fit-content !important;
+    width: 90% !important;
+    margin-bottom: 10px;
+  }
+  .photo {
+    height: 400px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    width: 100% !important;
+    height: fit-content !important;
+  }
+  .photo {
+    width: 400px !important;
+    height: 360px !important;
+  }
+  .blank, .capturedImage {
+    height: 320px !important;
+    width: 100% !important;
+  }
+  .captureButton  {
+    width: 60px !important;
+    height: 60px !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .capturedImage {
+    width: 300px !important;
+    height: 260px !important;
+  }
+  .photo {
+    width: 300px !important;
+    height: 300px !important;
+  }
+}
