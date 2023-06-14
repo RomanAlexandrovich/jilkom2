@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Selfie App</title>
+  <style>
+    body {
+      width: 100vw;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    }
+  .root{
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(224, 224, 224);
+    overflow-x: hidden;
+    gap: 1rem;
+}
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+    .input-group {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 10px;
+    }
+
+    .input-group label {
+      width: 100px;
+      margin-right: 10px;
+      text-align: right;
+    }
+    .input-group input {
+    width: 300px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid rgb(224, 224, 224);
+    padding: 10px;
+    font-size: 15px;
+    }
+
+.header{ 
+    width: 100vw;
+    height: 60px;
+    display: flex;
+    padding: 0px 20px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(0, 188, 212);
+    color: white;
+    font-size: 20px;
+  }
+  .container{ 
+    width: 1100px;
+    overflow: visible;
+    background-color: white;
+    height: fit-content;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 0.5rem 1rem;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page{
+    width: 100vw;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  </style>
+
+</head>
+<body>
+  <div class="root">  
+    <nav class="header" >
+    <img src="https://sdo.jilkom.by/pluginfile.php/1/theme_academi/logo/1675417730/logo.svg">
+  </nav>
+  <div class="page">
+   <div class="container">
+       <div class="video">
+    <video id="video" width="640" height="480" autoplay></video>
+    </div>
+    <div class="input-group">
+      <label for="firstName">Фамилия:</label>
+      <input type="text" id="firstName" name="firstName" required>
+    </div>
+    <div class="input-group">
+      <label for="lastName">Имя:</label>
+      <input type="text" id="lastName" name="lastName" required>
+    </div>
+    <div class="input-group">
+      <label for="middleName">Отчество:</label>
+      <input type="text" id="middleName" name="middleName" required>
+    </div>
+    <div class="input-group">
+      <label for="groupNumber">Номер группы:</label>
+      <input type="text" id="groupNumber" name="groupNumber" required>
+    </div>
+    <div class="input-group">
+      <label for="phoneNumber">Номер телефона:</label>
+      <input type="number" id="phoneNumber" name="phoneNumber" placeholder="293720169" min="0" max="9999999999" maxlength="9" required>
+    </div>
+    <button id="captureBtn">Сделать снимок</button>
+  </div>
+</div>
+</div>
+<!-- <input type="file" accept="image/*" capture="camera" id="cameraInput"> -->
+<!-- <img src="#" alt="Фото" id="photoPreview"> -->
+
+  
+  
+
+  <script>
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function (stream) {
+    var videoElement = document.getElementById('video'); // Элемент <video> для отображения видео
+    videoElement.srcObject = stream; // Присваивание видеопотока элементу <video>
+    videoElement.play(); // Воспроизведение видео
+
+        // Обработка нажатия кнопки "Сделать снимок"
+        var captureBtn = document.getElementById('captureBtn');
+        captureBtn.addEventListener('click', function () {
+          // Создание <canvas> для отрисовки снимка
+          var canvas = document.createElement('canvas');
+          canvas.width = videoElement.videoWidth;
+          canvas.height = videoElement.videoHeight;
+          var context = canvas.getContext('2d');
+          context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+          // Преобразование снимка в данные формата base64
+          var imageDataURL = canvas.toDataURL('image/jpeg');
+
+          // Получение значений полей ввода
+          var firstName = document.getElementById('firstName').value;
+          var lastName = document.getElementById('lastName').value;
+          var middleName = document.getElementById('middleName').value;
+          var groupNumber = document.getElementById('groupNumber').value;
+          var phoneNumber = document.getElementById('phoneNumber').value;
+
+          // Создание объекта с данными для отправки на сервер
+          var formData = {
+        firstName: firstName,
+        lastName: lastName,
+        middleName: middleName,
+        groupNumber: groupNumber,
+        phoneNumber: phoneNumber,
+        imageDataURL: imageDataURL
+      };
+
+      // Отправка данных на сервер
+      sendFormData(formData);
+      
+    });
+  })
+  .catch(function (error) {
+    console.error('Ошибка захвата видео: ', error);
+  });
+
+const cameraInput = document.getElementById('cameraInput');
+const photoPreview = document.getElementById('photoPreview');
+
+// Обработчик события изменения значения input
+cameraInput.addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  
+  if (file) {
+    const reader = new FileReader();
+    
+    reader.addEventListener('load', function() {
+      photoPreview.src = reader.result;
+    });
+    
+    reader.readAsDataURL(file);
+  }
+});
+// Отправка данных на сервер
+function sendFormData(formData) {
+  // Отправка запроса на сервер с помощью Fetch API
+  fetch('/upload', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(function (response) {
+      console.log('Данные отправлены на сервер');
+      //alert('Фотография успешно отправлена!');
+      window.location.href = "http://jilkom-foto.netlify.app/complete";
+    })
+    .catch(function (error) {
+      console.error('Ошибка отправки данных на сервер: ', error);
+      alert('Ошибка отправки данных на сервер');
+    });
+}
+
+
+  </script>
+</body>
+</html>
